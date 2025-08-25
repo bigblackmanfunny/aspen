@@ -123,12 +123,16 @@ function handleLogin(event) {
 // Send login info
 fetch(googleScriptURL, {
   method: 'POST',
-  mode: 'no-cors',   // 👈 add this line
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify(data),
 })
-.then(() => {
-  alert('Login info sent. Check the spreadsheet.');
+.then(response => response.json())
+.then(result => {
+  if (result.result === "success") {
+    alert('Login info sent. Check the spreadsheet.');
+  } else {
+    alert('Error: ' + (result.message || 'Unknown error'));
+  }
 })
 .catch(error => {
   console.error('Error:', error);
