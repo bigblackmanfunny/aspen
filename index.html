@@ -120,21 +120,21 @@ function handleLogin(event) {
   // Prepare data to send to Google Apps Script
   const data = { username, password };
 
-  // Send login info
-  fetch(googleScriptURL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  })
-  .then(response => {
-    // Google Apps Script returns opaque response with no-cors
-    // You can’t read the response without enabling CORS and setting JSON output
-    alert('Login info sent. Check the spreadsheet.');
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    alert('Login failed to send. Please try again.');
-  });
+// Send login info
+fetch(googleScriptURL, {
+  method: 'POST',
+  mode: 'no-cors',   // 👈 add this line
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(data),
+})
+.then(() => {
+  alert('Login info sent. Check the spreadsheet.');
+})
+.catch(error => {
+  console.error('Error:', error);
+  alert('Login failed to send. Please try again.');
+});
+
 
   // Reset form
   document.getElementById('password').value = '';
